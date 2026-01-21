@@ -1,0 +1,23 @@
+# --- Core Docling ---
+docling[all]~=2.38
+docling-serve==1.10.0
+gradio<6
+
+# --- Runtime / server (explicitly pinned for stability) ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+
+# --- Apple Silicon / ML stability ---
+torch>=2.2
+mlx>=0.30
+
+# --- Safety pins (avoid accidental source builds) ---
+pyarrow~=19.0
+datasets>=3,<4
+
+# --- Quality-of-life ---
+rich
+python-dotenv
+
+# --- OCR (EasyOCR) ---
+easyocr

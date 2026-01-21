@@ -1,0 +1,14 @@
+# Virtual environment
+venv/
+
+# Docling artifacts and caches
+artifacts/
+scratch/
+logs/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# OS files
+.DS_Store
