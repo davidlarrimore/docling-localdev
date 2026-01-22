@@ -25,6 +25,12 @@ export TOKENIZERS_PARALLELISM=false
 export DOCLING_ARTIFACTS_PATH="${DOCLING_ARTIFACTS_PATH:-${BASE_DIR}/artifacts}"
 export DOCLING_SCRATCH_PATH="${DOCLING_SCRATCH_PATH:-${BASE_DIR}/scratch}"
 
+# Menu bar patch: capture task IDs from UI async requests.
+PATCH_DIR="${BASE_DIR}/macos/DoclingMenuBar/patches"
+if [[ -d "${PATCH_DIR}" ]]; then
+  export PYTHONPATH="${PATCH_DIR}:${PYTHONPATH:-}"
+fi
+
 # Server binding
 export UVICORN_HOST="${UVICORN_HOST:-127.0.0.1}"
 export UVICORN_PORT="${UVICORN_PORT:-5001}"
