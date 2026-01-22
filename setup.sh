@@ -11,6 +11,7 @@ VENV_DIR="venv"
 ARTIFACTS_DIR="$(pwd)/artifacts"
 SCRATCH_DIR="$(pwd)/scratch"
 LOGS_DIR="$(pwd)/logs"
+ROOT_DIR="$(pwd)"
 
 # -----------------------------
 # Clean previous setup
@@ -107,16 +108,19 @@ EOF
 # -----------------------------
 # Create run script
 # -----------------------------
-RUN_SCRIPT="run-docling.sh"
+RUN_SCRIPT="run-docling-local-apple-silicon.sh"
 
 cat <<'EOF' > ${RUN_SCRIPT}
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+
+# Local Docling Serve runner for Apple Silicon only.
+# This script is separate from the macOS menu bar app bundle.
 
 BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "${BASE_DIR}/venv/bin/activate"
 
-echo "🚀 Starting Docling Serve..."
+echo "🚀 Starting Docling Serve (local Apple Silicon)..."
 echo "🌐 http://localhost:5001/ui"
 
 # Docling Serve settings (match Curatore defaults)
@@ -137,6 +141,13 @@ export TOKENIZERS_PARALLELISM=false
 export DOCLING_ARTIFACTS_PATH="${DOCLING_ARTIFACTS_PATH:-${BASE_DIR}/artifacts}"
 export DOCLING_SCRATCH_PATH="${DOCLING_SCRATCH_PATH:-${BASE_DIR}/scratch}"
 
+# Optional menu bar patch: capture task IDs from UI async requests.
+# The macOS menu bar app can point at this script via serviceScriptPath.
+PATCH_DIR="${BASE_DIR}/macos/DoclingMenuBar/patches"
+if [[ -d "${PATCH_DIR}" ]]; then
+  export PYTHONPATH="${PATCH_DIR}:${PYTHONPATH:-}"
+fi
+
 # Server binding
 export UVICORN_HOST="${UVICORN_HOST:-127.0.0.1}"
 export UVICORN_PORT="${UVICORN_PORT:-5001}"
@@ -152,9 +163,21 @@ EOF
 
 chmod +x ${RUN_SCRIPT}
 
+# -----------------------------
+# Build macOS menu bar app
+# -----------------------------
+if [[ -x "${ROOT_DIR}/macos/DoclingMenuBar/build-app.sh" ]]; then
+  echo "🍎 Building macOS menu bar app..."
+  ICON_SOURCE="${ROOT_DIR}/logo.png" \
+    ICONSET_DIR="${ROOT_DIR}/build/AppIcon.iconset" \
+    "${ROOT_DIR}/macos/DoclingMenuBar/build-app.sh"
+else
+  echo "⚠️  macOS menu bar build script not found or not executable."
+fi
+
 echo ""
 echo "🎉 Docling setup complete!"
 echo ""
 echo "Next steps:"
-echo "  ▶ Run Docling: ./run-docling.sh <command>"
-echo "  ▶ Example:     ./run-docling.sh --help"
+echo "  ▶ Run Docling: ./run-docling-local-apple-silicon.sh <command>"
+echo "  ▶ Example:     ./run-docling-local-apple-silicon.sh --help"

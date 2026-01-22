@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+
+# Local Docling Serve runner for Apple Silicon only.
+# This script is separate from the macOS menu bar app bundle.
 
 BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "${BASE_DIR}/venv/bin/activate"
 
-echo "🚀 Starting Docling Serve..."
+echo "🚀 Starting Docling Serve (local Apple Silicon)..."
 echo "🌐 http://localhost:5001/ui"
 
 # Docling Serve settings (match Curatore defaults)
@@ -25,7 +28,8 @@ export TOKENIZERS_PARALLELISM=false
 export DOCLING_ARTIFACTS_PATH="${DOCLING_ARTIFACTS_PATH:-${BASE_DIR}/artifacts}"
 export DOCLING_SCRATCH_PATH="${DOCLING_SCRATCH_PATH:-${BASE_DIR}/scratch}"
 
-# Menu bar patch: capture task IDs from UI async requests.
+# Optional menu bar patch: capture task IDs from UI async requests.
+# The macOS menu bar app can point at this script via serviceScriptPath.
 PATCH_DIR="${BASE_DIR}/macos/DoclingMenuBar/patches"
 if [[ -d "${PATCH_DIR}" ]]; then
   export PYTHONPATH="${PATCH_DIR}:${PYTHONPATH:-}"
