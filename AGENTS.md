@@ -1,17 +1,15 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- `macos/DoclingMenuBar/`: Swift menu bar app source (`main.swift`), build scripts, and assets.
-- `macos/DoclingMenuBar/assets/`: App icon sources (e.g., `icon.ppm`).
-- `macos/DoclingMenuBar/patches/`: Optional Python patches used by the menu bar app.
+- `macos/DoclingMenuBar/`: Swift menu bar app source (`main.swift`) and build scripts.
 - `build/`: Generated app bundle and icon artifacts.
 - `artifacts/` and `scratch/`: Docling Serve output and temporary working data.
 - `run-docling-local-apple-silicon.sh`: Local runner for Docling Serve with environment defaults.
+- `logo.png`: App icon source used by build script.
 
 ## Build, Test, and Development Commands
-- `./macos/DoclingMenuBar/build-app.sh`: Builds `build/DoclingMenuBar.app` from `main.swift` and assets.
+- `./macos/DoclingMenuBar/build-app.sh`: Builds `build/DoclingMenuBar.app` from `main.swift` and `logo.png`.
 - `open build/DoclingMenuBar.app`: Launches the menu bar app bundle.
-- `swiftc -o DoclingMenuBar macos/DoclingMenuBar/main.swift`: Builds the standalone binary.
 - `./macos/DoclingMenuBar/install-launchagent.sh`: Installs a LaunchAgent to start the app at login.
 - `./run-docling-local-apple-silicon.sh`: Starts Docling Serve using the local virtual environment.
 
@@ -22,7 +20,7 @@
 
 ## Testing Guidelines
 - No automated tests are present; focus on manual validation.
-- Suggested checks: build the app, launch it, and verify it polls Docling Serve.
+- Suggested checks: build the app, launch it, and verify it starts Docling Serve automatically.
 
 ## Commit & Pull Request Guidelines
 - Commit messages in history are short, imperative, and capitalized (e.g., "Add macOS menu bar app...").
@@ -30,5 +28,5 @@
 
 ## Configuration & Runtime Notes
 - Menu bar config: `~/Library/Application Support/DoclingMenuBar/config.json`.
-- Task cache: `~/Library/Application Support/DoclingMenuBar/tasks.json`.
-- Update `serviceScriptPath` in the config to point at `run-docling-local-apple-silicon.sh`.
+- The app auto-detects the Docling installation path on startup.
+- Config options: `baseURL`, `pollIntervalSeconds`, `doclingInstallPath`, `autoStartOnLaunch`.

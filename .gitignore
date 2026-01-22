@@ -13,20 +13,19 @@ __pycache__/
 # OS files
 .DS_Store
 
-# Xcode / Apple platform builds
+# Build outputs
 build/
 DerivedData/
 *.xcuserdata/
 *.xcscmblueprint
 *.xccheckout
-*.app
-*.ipa
 *.dSYM
 *.xcarchive
 .build/
 
-# Local Swift binaries
-DoclingMenuBar
+# Compiled app bundles (build output, not source)
+*.app
+*.ipa
 
-# macOS app sources (ignored during iteration)
-macos/
+# Local Swift binaries (standalone, not in .app)
+DoclingMenuBar
